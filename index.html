@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Yu-Gi-Oh Card Viewer</title>
+
+<style>
+
+body{
+    background:#121212;
+    color:white;
+    font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+    margin:0;
+    padding:20px;
+}
+
+.container{
+    max-width:500px;
+    margin:auto;
+}
+
+.cardImage{
+    width:100%;
+    border-radius:15px;
+}
+
+.card{
+    background:#1f1f1f;
+    padding:20px;
+    border-radius:15px;
+    margin-top:20px;
+}
+
+h1{
+    text-align:center;
+}
+
+.label{
+    color:#7db7ff;
+    font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<img id="cardImage" class="cardImage">
+
+<div class="card">
+
+<h1 id="cardName"></h1>
+
+<p><span class="label">Attribute:</span> <span id="attribute"></span></p>
+
+<p><span class="label">Type:</span> <span id="type"></span></p>
+
+<p id="levelRank"></p>
+
+<p id="monsterStats"></p>
+
+<p id="pendulum"></p>
+
+<p><span class="label">Description</span></p>
+
+<p id="description"></p>
+
+</div>
+
+</div>
+
+<script>
+
+const params=new URLSearchParams(window.location.search);
+
+document.getElementById("cardImage").src=params.get("image");
+
+document.getElementById("cardName").textContent=params.get("name");
+
+document.getElementById("attribute").textContent=params.get("attribute");
+
+document.getElementById("type").textContent=params.get("type");
+
+document.getElementById("levelRank").textContent=params.get("level");
+
+document.getElementById("monsterStats").textContent=params.get("stats");
+
+document.getElementById("pendulum").textContent=params.get("pendulum");
+
+document.getElementById("description").textContent=params.get("description");
+
+</script>
+
+</body>
+</html>
