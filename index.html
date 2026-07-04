@@ -1,48 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Yu-Gi-Oh Card Viewer</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
+    <title>Yu-Gi-Oh Card Viewer</title>
 
-body{
-    background:#121212;
-    color:white;
-    font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-    margin:0;
-    padding:20px;
-}
+    <meta name="theme-color" content="#121212">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-.container{
-    max-width:500px;
-    margin:auto;
-}
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icons/favicon.png">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
 
-.cardImage{
-    width:100%;
-    border-radius:15px;
-}
-
-.card{
-    background:#1f1f1f;
-    padding:20px;
-    border-radius:15px;
-    margin-top:20px;
-}
-
-h1{
-    text-align:center;
-}
-
-.label{
-    color:#7db7ff;
-    font-weight:bold;
-}
-
-</style>
+    <link rel="stylesheet" href="style.css">
 
 </head>
 
@@ -50,51 +23,38 @@ h1{
 
 <div class="container">
 
-<img id="cardImage" class="cardImage">
+    <header>
 
-<div class="card">
+        <h1>🃏 Yu-Gi-Oh Card Viewer</h1>
 
-<h1 id="cardName"></h1>
+        <p class="subtitle">
+            Search over every Yu-Gi-Oh card
+        </p>
 
-<p><span class="label">Attribute:</span> <span id="attribute"></span></p>
+    </header>
 
-<p><span class="label">Type:</span> <span id="type"></span></p>
+    <div class="searchBox">
 
-<p id="levelRank"></p>
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Search by card name..."
+            autocomplete="off"
+            spellcheck="false">
 
-<p id="monsterStats"></p>
+    </div>
 
-<p id="pendulum"></p>
+    <div id="cardCount" class="cardCount">
+        Loading cards...
+    </div>
 
-<p><span class="label">Description</span></p>
+    <div id="results" class="results">
 
-<p id="description"></p>
+    </div>
 
 </div>
 
-</div>
-
-<script>
-
-const params=new URLSearchParams(window.location.search);
-
-document.getElementById("cardImage").src=params.get("image");
-
-document.getElementById("cardName").textContent=params.get("name");
-
-document.getElementById("attribute").textContent=params.get("attribute");
-
-document.getElementById("type").textContent=params.get("type");
-
-document.getElementById("levelRank").textContent=params.get("level");
-
-document.getElementById("monsterStats").textContent=params.get("stats");
-
-document.getElementById("pendulum").textContent=params.get("pendulum");
-
-document.getElementById("description").textContent=params.get("description");
-
-</script>
+<script src="app.js"></script>
 
 </body>
 </html>
