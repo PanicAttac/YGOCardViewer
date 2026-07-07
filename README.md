@@ -1,2 +1,2 @@
 # YGOcardViewer
-You will need to Download cardsinfo.zip
+Hope you enjoy my little project
