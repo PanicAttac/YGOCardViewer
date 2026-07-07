@@ -59,14 +59,65 @@ function showError(message) {
 }
 
 const searchInput = document.getElementById("searchInput");
+const suggestionsBox = document.getElementById("searchSuggestions");
 
-searchInput.addEventListener("input", async (event) => {
+let searchTimer;
+
+searchInput.addEventListener("input", (event) => {
+  clearTimeout(searchTimer);
+
   const searchText = event.target.value.trim();
 
   if (searchText.length < 2) {
-    document.getElementById("results").innerHTML = "";
+    suggestionsBox.innerHTML = "";
     return;
   }
 
-  await searchCard(searchText);
+  searchTimer = setTimeout(() => {
+    getSuggestions(searchText);
+  }, 300);
 });
+
+
+async function getSuggestions(searchText) {
+  try {
+    const response = await fetch(
+      `https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=${encodeURIComponent(searchText)}`
+    );
+
+    const data = await response.json();
+
+    if (!data.data) {
+      suggestionsBox.innerHTML = "";
+      return;
+    }
+
+    showSuggestions(data.data);
+
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+
+function showSuggestions(cards) {
+  suggestionsBox.innerHTML = "";
+
+  cards.slice(0, 10).forEach(card => {
+
+    const div = document.createElement("div");
+
+    div.className = "searchSuggestion";
+    div.textContent = card.name;
+
+    div.addEventListener("click", () => {
+      searchInput.value = card.name;
+      suggestionsBox.innerHTML = "";
+
+      searchCard(card.name);
+    });
+
+    suggestionsBox.appendChild(div);
+
+  });
+}
