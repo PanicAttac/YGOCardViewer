@@ -121,3 +121,4 @@ function showSuggestions(cards) {
 
   });
 }
+console.log("App loaded");
