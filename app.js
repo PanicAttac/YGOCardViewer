@@ -17,6 +17,7 @@ async function searchCard(cardName) {
     console.error(error);
   }
 }
+
 function displayResults(cards) {
   const container = document.getElementById("results");
   container.innerHTML = "";
@@ -33,3 +34,22 @@ function displayResults(cards) {
     container.appendChild(div);
   });
 }
+
+function showError(message) {
+  document.getElementById("results").innerHTML = `
+    <p>${message}</p>
+  `;
+}
+
+const searchInput = document.getElementById("searchInput");
+
+searchInput.addEventListener("input", async (event) => {
+  const searchText = event.target.value.trim();
+
+  if (searchText.length < 2) {
+    document.getElementById("results").innerHTML = "";
+    return;
+  }
+
+  await searchCard(searchText);
+});
