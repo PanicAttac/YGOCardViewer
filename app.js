@@ -10,6 +10,23 @@ async function searchCard(cardName) {
       return;
     }
 
+    // Look for an exact match (ignoring upper/lower case)
+    const exactMatch = data.data.find(
+      card => card.name.toLowerCase() === cardName.toLowerCase()
+    );
+
+    if (exactMatch) {
+      displayResults([exactMatch]);
+    } else {
+      displayResults(data.data);
+    }
+
+  } catch (error) {
+    showError("API error or card not found");
+    console.error(error);
+  }
+}
+
     displayResults(data.data);
 
   } catch (error) {
