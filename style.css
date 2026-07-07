@@ -167,3 +167,21 @@ header h1{
 }
 
 }
+.searchSuggestions {
+    background: #1d1d1d;
+    border-radius: 8px;
+    margin-top: 6px;
+    overflow: hidden;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.searchSuggestion {
+    padding: 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #333;
+}
+
+.searchSuggestion:hover {
+    background: #2f2f2f;
+}
