@@ -20,28 +20,69 @@ async function searchCard(cardName) {
 }
 
 
-function displayResults(cards) {
-  const container = document.getElementById("results");
+function displayCard(card) {
 
-  container.innerHTML = "";
+  const viewer = document.getElementById("cardViewer");
 
-  cards.forEach(card => {
+  let statLine = "";
 
-    const div = document.createElement("div");
+  if (card.type.includes("Link")) {
 
-    div.className = "cardResult";
-
-    div.innerHTML = `
-      <h3>${card.name}</h3>
-      <img src="${card.card_images[0].image_url}" width="150">
-      <p>${card.type}</p>
+    statLine = `
+      <p><strong>Link Rating:</strong> ${card.linkval}</p>
+      <p><strong>ATK:</strong> ${card.atk}</p>
     `;
 
-    container.appendChild(div);
+  } else if (card.type.includes("XYZ")) {
 
-  });
+    statLine = `
+      <p><strong>Rank:</strong> ${card.level}</p>
+      <p><strong>ATK:</strong> ${card.atk}</p>
+      <p><strong>DEF:</strong> ${card.def}</p>
+    `;
+
+  } else if (card.type.includes("Monster")) {
+
+    statLine = `
+      <p><strong>Level:</strong> ${card.level}</p>
+      <p><strong>ATK:</strong> ${card.atk}</p>
+      <p><strong>DEF:</strong> ${card.def}</p>
+    `;
+
+  }
+
+  const pendulum =
+    card.scale !== undefined
+      ? `<p><strong>Pendulum Scale:</strong> ${card.scale}</p>`
+      : "";
+
+  const archetype =
+    card.archetype
+      ? `<p><strong>Archetype:</strong> ${card.archetype}</p>`
+      : "";
+
+  viewer.innerHTML = `
+    <div class="card">
+
+      <img src="${card.card_images[0].image_url}" alt="${card.name}">
+
+      <h2>${card.name}</h2>
+
+      <p><strong>Type:</strong> ${card.type}</p>
+
+      <p><strong>Attribute:</strong> ${card.attribute || "-"}</p>
+
+      ${statLine}
+
+      ${pendulum}
+
+      ${archetype}
+
+      <p>${card.desc}</p>
+
+    </div>
+  `;
 }
-
 
 function showError(message) {
   document.getElementById("cardViewer").innerHTML = `
