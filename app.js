@@ -44,11 +44,9 @@ function displayResults(cards) {
 
 
 function showError(message) {
-
-  document.getElementById("results").innerHTML = `
+  document.getElementById("cardViewer").innerHTML = `
     <p>${message}</p>
   `;
-
 }
 
 
