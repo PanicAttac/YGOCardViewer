@@ -14,9 +14,9 @@ async function searchCard(cardName) {
     displayCard(data.data[0]);
 
   } catch (error) {
-    showError("API error");
-    console.error(error);
-  }
+  console.error(error);
+  alert(error.message);
+}
 }
 
 
