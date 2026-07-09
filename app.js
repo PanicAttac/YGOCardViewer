@@ -1,3 +1,4 @@
+alert("App.js Version 1");
 // ==========================================
 // Yu-Gi-Oh Card Viewer
 // Phase 1 - Database Loader
