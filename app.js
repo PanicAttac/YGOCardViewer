@@ -26,7 +26,7 @@ async function loadCards() {
 }
 
 function initialiseApp() {
-    const searchBox = document.getElementById("searchBox");
+    const searchBox = document.getElementById("searchInput");
 
     searchBox.addEventListener("input", searchCards);
 
