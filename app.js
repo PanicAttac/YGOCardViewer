@@ -13,28 +13,36 @@ const CARD_DATABASE_URL =
 // Load card database
 async function loadCards() {
 
+    const cardCount = document.getElementById("cardCount");
+
     try {
 
-        console.log("Downloading card database...");
+        cardCount.textContent = "Downloading card database...";
 
         const response = await fetch(CARD_DATABASE_URL);
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
 
         const data = await response.json();
 
         allCards = data.data;
 
-        console.log(`Loaded ${allCards.length} cards`);
+        cardCount.textContent =
+            `Loaded ${allCards.length} cards`;
 
         initialiseApp();
 
     } catch (error) {
 
-        console.error(
-            "Could not load card database:",
-            error
-        );
+        cardCount.textContent =
+            "Failed to load card database.";
+
+        console.error(error);
 
     }
+
 }
 
 
