@@ -1,17 +1,24 @@
 // ==========================================
-// Yu-Gi-Oh! Card Search
-// Version 1.0
-// Phase 1 - Section 1
+// Yu-Gi-Oh Card Viewer
+// Phase 1 - Database Loader
 // ==========================================
 
 let allCards = [];
-let filteredCards = [];
-let recentSearches = [];
 
-// Load the card database
+// YGOPRODeck database
+const CARD_DATABASE_URL =
+    "https://db.ygoprodeck.com/api/v7/cardinfo.php";
+
+
+// Load card database
 async function loadCards() {
+
     try {
-        const response = await fetch("cardinfo.json");
+
+        console.log("Downloading card database...");
+
+        const response = await fetch(CARD_DATABASE_URL);
+
         const data = await response.json();
 
         allCards = data.data;
@@ -21,17 +28,69 @@ async function loadCards() {
         initialiseApp();
 
     } catch (error) {
-        console.error("Unable to load card database.", error);
+
+        console.error(
+            "Could not load card database:",
+            error
+        );
+
     }
 }
 
+
+// Prepare app
 function initialiseApp() {
-    const searchBox = document.getElementById("searchInput");
 
-    searchBox.addEventListener("input", searchCards);
+    const searchInput =
+        document.getElementById("searchInput");
 
-    searchBox.focus();
+
+    if (!searchInput) {
+
+        console.error(
+            "Search box not found"
+        );
+
+        return;
+    }
+
+
+    searchInput.addEventListener(
+        "input",
+        searchCards
+    );
+
+
+    searchInput.focus();
+
 }
 
-// Start the app
+
+// Search function placeholder
+function searchCards(event) {
+
+    const searchTerm =
+        event.target.value.toLowerCase();
+
+
+    if (!searchTerm) {
+
+        return;
+
+    }
+
+
+    const results = allCards.filter(card =>
+        card.name
+            .toLowerCase()
+            .includes(searchTerm)
+    );
+
+
+    console.log(results);
+
+}
+
+
+// Start app
 loadCards();
