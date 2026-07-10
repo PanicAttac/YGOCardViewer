@@ -1,0 +1,10 @@
+{
+  "developmentMode": true,
+  "offlineMode": true,
+  "showDatabaseStatus": true,
+  "showPerformance": true,
+  "enableSearchHistory": true,
+  "enableFavourites": false,
+  "enableUpdateChecker": false,
+  "theme": "dark"
+}
