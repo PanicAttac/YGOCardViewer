@@ -1,7 +1,7 @@
 /*
 ==========================================================
  Project Millennium
- Application Entry Point
+ Application Controller
 ==========================================================
 */
 
@@ -20,107 +20,46 @@ const AppPaths = {
 };
 
 
-// ==========================================
-// Yu-Gi-Oh Card Viewer
-// Phase 1 - Database Loader
-// ==========================================
+const App = {
 
-let allCards = [];
+    ready: false,
 
-// YGOPRODeck database
-const CARD_DATABASE_URL =
-    "https://db.ygoprodeck.com/api/v7/cardinfo.php";
+    async start() {
 
-
-// Load card database
-async function loadCards() {
-
-    const cardCount = document.getElementById("cardCount");
-
-    try {
-
-        cardCount.textContent = "Downloading card database...";
-
-        const response = await fetch(CARD_DATABASE_URL);
-
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        allCards = data.data;
-
-        cardCount.textContent =
-            `Loaded ${allCards.length} cards`;
-
-        initialiseApp();
-
-    } catch (error) {
-
-        cardCount.textContent =
-            "Failed to load card database.";
-
-        console.error(error);
-
-    }
-
-}
-
-
-// Prepare app
-function initialiseApp() {
-
-    const searchInput =
-        document.getElementById("searchInput");
-
-
-    if (!searchInput) {
-
-        console.error(
-            "Search box not found"
+        Logger.info(
+            "PM-1001",
+            "App",
+            "Project Millennium starting..."
         );
 
-        return;
-    }
+        await DatabaseManager.load();
 
+        if (!DatabaseManager.isReady()) {
 
-    searchInput.addEventListener(
-        "input",
-        searchCards
-    );
+            Logger.error(
+                "PM-1002",
+                "App",
+                "Database failed to load."
+            );
 
+            return;
 
-    searchInput.focus();
+        }
 
-}
+        this.ready = true;
 
-
-// Search function placeholder
-function searchCards(event) {
-
-    const searchTerm =
-        event.target.value.toLowerCase();
-
-
-    if (!searchTerm) {
-
-        return;
+        Logger.success(
+            "PM-1003",
+            "App",
+            "Application ready."
+        );
 
     }
 
-
-    const results = allCards.filter(card =>
-        card.name
-            .toLowerCase()
-            .includes(searchTerm)
-    );
+};
 
 
-    console.log(results);
-
-}
-
-
-// Start app
-loadCards();
+document.addEventListener(
+    "DOMContentLoaded",
+    () => App.start()
+);
