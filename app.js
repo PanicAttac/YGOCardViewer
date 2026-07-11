@@ -1,4 +1,23 @@
-alert("App.js Version 1");
+/*
+==========================================================
+ Project Millennium
+ Application Entry Point
+==========================================================
+*/
+
+const AppPaths = {
+
+    config: "app-config.json",
+
+    database: "cardinfo.json",
+
+    assets: "assets/",
+
+    icons: "assets/icons/",
+
+    images: "assets/images/"
+
+};
 
 
 // ==========================================
