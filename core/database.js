@@ -3,87 +3,168 @@
  Project Millennium
  Database Manager v1.0
 ==========================================================
- Handles:
- - Loading the offline database
- - Loading configuration
- - Loading database version
- - Reporting database status
-==========================================================
 */
 
 const DatabaseManager = {
 
-    // Internal data
     config: null,
-    version: null,
     cards: [],
     loaded: false,
     loadTime: 0,
 
-    // Load everything
+    indexes: {
+        cardById: new Map(),
+        cardsByName: new Map(),
+        cardsByType: new Map(),
+        cardsByAttribute: new Map(),
+        cardsByRace: new Map()
+    },
+
     async load() {
 
         const startTime = performance.now();
 
         try {
 
-            // Load configuration
-            const configResponse = await fetch("config.json");
-            this.config = await configResponse.json();
+            Logger.info(
+                "PM-1201",
+                "Database",
+                "Loading configuration..."
+            );
 
-            // Load database version
-            const versionResponse = await fetch("database-version.json");
-            this.version = await versionResponse.json();
+            const configResponse =
+                await fetch("app-config.json");
 
-            // Load card database
-            const cardResponse = await fetch("cardinfo.json");
-            const cardData = await cardResponse.json();
+            this.config =
+                await configResponse.json();
 
-            // Store cards
-            this.cards = cardData.data || [];
+
+            Logger.info(
+                "PM-1202",
+                "Database",
+                "Loading card database..."
+            );
+
+            const databaseResponse =
+                await fetch("cardinfo.json");
+
+            const database =
+                await databaseResponse.json();
+
+            this.cards =
+                database.data || [];
+
+
+            Logger.info(
+                "PM-1203",
+                "Database",
+                "Building indexes..."
+            );
+
+            this.buildIndexes();
 
             this.loaded = true;
 
             this.loadTime =
                 (performance.now() - startTime).toFixed(2);
 
-            console.log("✅ Database Loaded");
+
+            Logger.success(
+                "PM-1204",
+                "Database",
+                `${this.cards.length} cards loaded`
+            );
 
         }
-        catch (error) {
 
-            console.error("❌ Database failed to load");
-
-            console.error(error);
+        catch(error){
 
             this.loaded = false;
 
+            Logger.error(
+                "PM-1205",
+                "Database",
+                error.message
+            );
+
         }
 
     },
 
-    isReady() {
+    buildIndexes() {
+
+        for(const card of this.cards){
+
+            // Card ID
+            this.indexes.cardById.set(card.id, card);
+
+            // Card Name
+            this.indexes.cardsByName.set(
+                card.name.toLowerCase(),
+                card
+            );
+
+            // Card Type
+            if(!this.indexes.cardsByType.has(card.type)){
+                this.indexes.cardsByType.set(card.type, []);
+            }
+
+            this.indexes.cardsByType
+                .get(card.type)
+                .push(card);
+
+            // Attribute
+            if(card.attribute){
+
+                if(!this.indexes.cardsByAttribute.has(card.attribute)){
+                    this.indexes.cardsByAttribute.set(card.attribute, []);
+                }
+
+                this.indexes.cardsByAttribute
+                    .get(card.attribute)
+                    .push(card);
+
+            }
+
+            // Race
+            if(card.race){
+
+                if(!this.indexes.cardsByRace.has(card.race)){
+                    this.indexes.cardsByRace.set(card.race, []);
+                }
+
+                this.indexes.cardsByRace
+                    .get(card.race)
+                    .push(card);
+
+            }
+
+        }
+
+    },
+
+    isReady(){
+
         return this.loaded;
+
     },
 
-    getCards() {
+    getCards(){
+
         return this.cards;
+
     },
 
-    getCardCount() {
+    getCardCount(){
+
         return this.cards.length;
+
     },
 
-    getVersion() {
-        return this.version;
-    },
+    getLoadTime(){
 
-    getConfig() {
-        return this.config;
-    },
-
-    getLoadTime() {
         return this.loadTime;
+
     }
 
 };
