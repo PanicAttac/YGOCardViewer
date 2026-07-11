@@ -1,0 +1,19 @@
+{
+  "app": {
+    "name": "Project Millennium",
+    "version": "1.0.0",
+    "build": 1
+  },
+  "database": {
+    "version": "2026-07-09",
+    "cardCount": 13284,
+    "offlineMode": true
+  },
+  "settings": {
+    "developmentMode": true,
+    "showPerformance": true,
+    "enableSearchHistory": true,
+    "enableUpdateChecker": false,
+    "theme": "dark"
+  }
+}
