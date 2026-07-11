@@ -33,7 +33,7 @@ const DatabaseManager = {
             );
 
             const configResponse =
-                await fetch("app-config.json");
+                await fetch("AppPaths.config");
 
             this.config =
                 await configResponse.json();
@@ -46,7 +46,7 @@ const DatabaseManager = {
             );
 
             const databaseResponse =
-                await fetch("cardinfo.json");
+                await fetch("AppPaths.database");
 
             const database =
                 await databaseResponse.json();
