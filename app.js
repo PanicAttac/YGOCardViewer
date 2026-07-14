@@ -7,14 +7,17 @@
 
 const AppPaths = {
 
+    // Configuration
     config: "app-config.json",
 
+    // Database
     database: "cardinfo.json",
 
+    // Folders
+    core: "core/",
+    data: "data/",
     assets: "assets/",
-
     icons: "assets/icons/",
-
     images: "assets/images/"
 
 };
@@ -32,22 +35,10 @@ const App = {
             "Project Millennium starting..."
         );
 
+        // Load the offline database
         await DatabaseManager.load();
 
-       Diagnostics.run();
-
-if (!Diagnostics.allPassed()) {
-
-    Logger.error(
-        "PM-1004",
-        "App",
-        "Diagnostics failed."
-    );
-
-    return;
-
-}
-
+        // Stop if the database failed to load
         if (!DatabaseManager.isReady()) {
 
             Logger.error(
@@ -60,6 +51,23 @@ if (!Diagnostics.allPassed()) {
 
         }
 
+        // Run startup diagnostics
+        Diagnostics.run();
+
+        // Stop if diagnostics failed
+        if (!Diagnostics.allPassed()) {
+
+            Logger.error(
+                "PM-1004",
+                "App",
+                "Diagnostics failed."
+            );
+
+            return;
+
+        }
+
+        // Application is ready
         this.ready = true;
 
         Logger.success(
@@ -73,6 +81,7 @@ if (!Diagnostics.allPassed()) {
 };
 
 
+// Start Project Millennium
 document.addEventListener(
     "DOMContentLoaded",
     () => App.start()
