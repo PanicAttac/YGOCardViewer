@@ -82,7 +82,44 @@ const SearchEngine = {
         };
 
     },
+getSuggestions(query, limit = 10) {
 
+    query = query.trim().toLowerCase();
+
+    if (query.length < 2) {
+        return [];
+    }
+
+    const suggestions = [];
+
+    for (const card of DatabaseManager.getCards()) {
+
+        const name = card.name.toLowerCase();
+
+        if (name.startsWith(query)) {
+
+            suggestions.push({
+                id: card.id,
+                name: card.name
+            });
+
+        }
+
+        if (suggestions.length >= limit) {
+            break;
+        }
+
+    }
+
+    Logger.info(
+        "PM-1303",
+        "Search",
+        `${suggestions.length} suggestion(s) generated`
+    );
+
+    return suggestions;
+
+},
     getCardById(id) {
 
         return DatabaseManager.indexes.cardById.get(id) || null;
