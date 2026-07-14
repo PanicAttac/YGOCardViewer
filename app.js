@@ -34,6 +34,20 @@ const App = {
 
         await DatabaseManager.load();
 
+       Diagnostics.run();
+
+if (!Diagnostics.allPassed()) {
+
+    Logger.error(
+        "PM-1004",
+        "App",
+        "Diagnostics failed."
+    );
+
+    return;
+
+}
+
         if (!DatabaseManager.isReady()) {
 
             Logger.error(
