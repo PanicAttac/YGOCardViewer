@@ -472,16 +472,392 @@ UI.displayCard = function (card) {
 
     `;
 
-    container.appendChild(footer);
+    container.appendChild(
 
-    this.elements.cardDisplay.appendChild(container);
+    UI.createCardFooter(card)
 
-    container.scrollIntoView({
+);
+/* ========================================================
+   Monster Card Renderer
+   Part 2A.2
+======================================================== */
 
-        behavior: "smooth",
+UI.renderMonsterCard = function (card, flags = {}) {
 
-        block: "start"
+    const section = document.createElement("div");
+
+    section.className = "monster-section";
+
+    /* ----------------------------------------------------
+       Stats Container
+    ---------------------------------------------------- */
+
+    const stats = document.createElement("div");
+
+    stats.className = "monster-stats";
+
+    /* ----------------------------------------------------
+       Level / Rank / Link
+    ---------------------------------------------------- */
+
+    if (flags.isLink) {
+
+        stats.appendChild(
+            this.createStatBox(
+                "🔗",
+                "Link Rating",
+                card.linkval || "-"
+            )
+        );
+
+    }
+    else if (flags.isXyz) {
+
+        stats.appendChild(
+            this.createStatBox(
+                "⭐",
+                "Rank",
+                card.level || "-"
+            )
+        );
+
+    }
+    else {
+
+        stats.appendChild(
+            this.createStatBox(
+                "⭐",
+                "Level",
+                card.level || "-"
+            )
+        );
+
+    }
+
+    /* ----------------------------------------------------
+       Pendulum Scale
+    ---------------------------------------------------- */
+
+    if (flags.isPendulum) {
+
+        stats.appendChild(
+            this.createStatBox(
+                "⚖️",
+                "Pendulum Scale",
+                card.scale ?? "-"
+            )
+        );
+
+    }
+
+    /* ----------------------------------------------------
+       Attack
+    ---------------------------------------------------- */
+
+    stats.appendChild(
+        this.createStatBox(
+            "⚔️",
+            "ATK",
+            card.atk ?? "?"
+        )
+    );
+
+    /* ----------------------------------------------------
+       Defence OR Link Arrows
+    ---------------------------------------------------- */
+
+    if (flags.isLink) {
+
+        let arrows = "-";
+
+        if (Array.isArray(card.linkmarkers) &&
+            card.linkmarkers.length > 0) {
+
+            arrows = card.linkmarkers.join(", ");
+
+        }
+
+        stats.appendChild(
+            this.createStatBox(
+                "🧭",
+                "Link Arrows",
+                arrows
+            )
+        );
+
+    }
+    else {
+
+        stats.appendChild(
+            this.createStatBox(
+                "🛡️",
+                "DEF",
+                card.def ?? "?"
+            )
+        );
+
+    }
+
+    section.appendChild(stats);
+
+    /* ----------------------------------------------------
+       Archetype
+    ---------------------------------------------------- */
+
+    if (card.archetype) {
+
+        const archetype = document.createElement("div");
+
+        archetype.className = "card-section";
+
+        archetype.innerHTML = `
+
+            <div class="section-title">
+
+                Archetype
+
+            </div>
+
+            <div class="section-content">
+
+                ${card.archetype}
+
+            </div>
+
+        `;
+
+        section.appendChild(archetype);
+
+    }
+
+    return section;
+
+};
+
+/* ========================================================
+   Stat Box Helper
+======================================================== */
+
+UI.createStatBox = function (icon, label, value) {
+
+    const box = document.createElement("div");
+
+    box.className = "stat-box";
+
+    box.innerHTML = `
+
+        <div class="stat-icon">
+
+            ${icon}
+
+        </div>
+
+        <div class="stat-label">
+
+            ${label}
+
+        </div>
+
+        <div class="stat-value">
+
+            ${value}
+
+        </div>
+
+    `;
+
+    return box;
+
+};
+/* ========================================================
+   Spell / Trap Card Renderer
+   Part 2A.3
+======================================================== */
+
+UI.renderSpellTrapCard = function (card) {
+
+    const section = document.createElement("div");
+
+    section.className = "spell-trap-section";
+
+    /* ----------------------------------------------------
+       Card Information
+    ---------------------------------------------------- */
+
+    section.appendChild(
+
+        this.createInfoSection(
+
+            "Card Information",
+
+            [
+
+                {
+                    label: "Type",
+                    value: card.type || "-"
+                },
+
+                {
+                    label: "Property",
+                    value: card.race || "-"
+                }
+
+            ]
+
+        )
+
+    );
+
+    /* ----------------------------------------------------
+       Archetype
+    ---------------------------------------------------- */
+
+    if (card.archetype) {
+
+        section.appendChild(
+
+            this.createInfoSection(
+
+                "Archetype",
+
+                [
+
+                    {
+                        value: card.archetype
+                    }
+
+                ]
+
+            )
+
+        );
+
+    }
+
+    return section;
+
+};
+
+/* ========================================================
+   Generic Information Section
+======================================================== */
+
+UI.createInfoSection = function (title, rows = []) {
+
+    const section = document.createElement("div");
+
+    section.className = "card-section";
+
+    const heading = document.createElement("div");
+
+    heading.className = "section-title";
+
+    heading.textContent = title;
+
+    section.appendChild(heading);
+
+    rows.forEach(row => {
+
+        const item = document.createElement("div");
+
+        item.className = "section-row";
+
+        if (row.label) {
+
+            item.innerHTML = `
+
+                <span class="section-label">
+                    ${row.label}
+                </span>
+
+                <span class="section-value">
+                    ${row.value}
+                </span>
+
+            `;
+
+        }
+        else {
+
+            item.innerHTML = `
+
+                <span class="section-value">
+                    ${row.value}
+                </span>
+
+            `;
+
+        }
+
+        section.appendChild(item);
 
     });
+
+    return section;
+
+};
+
+/* ========================================================
+   Banlist Helper
+======================================================== */
+
+UI.getBanlistStatus = function (card) {
+
+    if (!card.banlist_info) {
+
+        return "Unlimited";
+
+    }
+
+    const info = card.banlist_info;
+
+    if (info.ban_tcg)
+        return info.ban_tcg;
+
+    if (info.ban_ocg)
+        return info.ban_ocg;
+
+    if (info.ban_goat)
+        return info.ban_goat;
+
+    return "Unlimited";
+
+};
+
+/* ========================================================
+   Card Footer Builder
+======================================================== */
+
+UI.createCardFooter = function (card) {
+
+    const footer = document.createElement("div");
+
+    footer.className = "card-footer";
+
+    footer.appendChild(
+
+        this.createInfoSection(
+
+            "Card Details",
+
+            [
+
+                {
+                    label: "Card ID",
+                    value: card.id
+                },
+
+                {
+                    label: "Banlist",
+                    value: this.getBanlistStatus(card)
+                }
+
+            ]
+
+        )
+
+    );
+
+    return footer;
 
 };
